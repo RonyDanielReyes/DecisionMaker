@@ -1,15 +1,17 @@
-const express = require('express');
-const router  = express.Router();
+const express = require("express");
+const router = express.Router();
 const { generateRandomString } = require('../public/scripts/helpers');
 const pollsQueries = require('../db/queries/polls');
 const choiceQueries = require('../db/queries/choices');
+const { Pool } = require("pg");
+const  mailNewPoll  = require('../public/scripts/mail').mailNewPoll;
 
 router.get('/', (req, res) => {
   res.render('new');
 });
 
 router.post('/', (req, res) => {
-  console.log(req.body);
+  console.log('I am here')
   let poll = {
     creator_email: req.body.email,
     active: true,
@@ -25,10 +27,11 @@ router.post('/', (req, res) => {
     req.body.choice_four,
     req.body.choice_five
   ];
-
-
-  pollsQueries.addPoll(poll)
+  return pollsQueries.addPoll(poll)
     .then(async(dbPoll) => {
+      console.log('dbPoll', dbPoll);
+      console.log("this is just the poll", poll)
+
       for (let i of choices) {
         if (i) {
           await choiceQueries.addChoice({
@@ -41,16 +44,22 @@ router.post('/', (req, res) => {
                 .json({ error: err.message });
             });
         }
-
       }
     })
     .then(()=> {
-      res.redirect('/admin');
+      mailNewPoll(poll).catch(console.error);
+      res.redirect(`/admin/${poll.admin_link}`);
     })
     .catch(err => {
       res
         .status(500)
         .json({ error: err.message });
     });
-});
+
+}
+
+
+
+);
+
 module.exports = router;
