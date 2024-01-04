@@ -1,5 +1,4 @@
 const db = require('../connection');
-
 /**
  * Get polls from the database..
  * @return {Promise<{}>} A promise to the user.
@@ -10,8 +9,9 @@ const getPolls = () => {
       return data.rows;
     });
 };
+
 /**
- * Get poll eith given id from the database.
+ * Get poll with given id from the database.
  * @param id poll id.
  * @return {Promise<{}>} A promise to the user.
  */
@@ -21,31 +21,48 @@ const getPollById = (id) => {
       return data.rows[0];
     });
 };
+
 /**
- * Add a new poll to the database.
- * @param {{}} poll
+ * Get poll with given link (admin or voter) from the database.
+ * @param link poll link.
  * @return {Promise<{}>} A promise to the user.
  */
-const addPoll = function(poll) {
-  return db
-    .query(
-      `
-    INSERT INTO polls (creator_email, active, title, description, voter_link, admin_link)
-    VALUES ($1, $2, $3, $4, $5, $6)
-    RETURNING *;
-    `,
-      [poll.creator_email, poll.active, poll.title, poll.description, poll.voter_link, poll.admin_link]
-    )
-    .then((result) => {
-      return result.rows[0];
-    })
-    .catch((err) => {
-      console.log(err.message);
+const getPollByLink = (link) => {
+  return db.query(
+    `SELECT * FROM polls
+    WHERE voter_link = $1
+    OR admin_link = $1
+    `
+    , [link])
+    .then(data => {
+      return data.rows[0];
     });
 };
 
-module.exports = {
+/**
+ * set poll to be closed
+ * @param id poll id.
+ * @return {Promise<{}>} A promise to the user.
+ */
+const closePoll = (id) => {
+  return db.query(
+    `
+    UPDATE polls
+    SET active = false
+    WHERE id = $1
+    `
+    , [id])
+    .then(data => {
+      return data.rows[0];
+    });
+};
+
+/**
+ * Add a new poll to the database.
+ * @param {{}} poll
+	@@ -50,4 +85,5 @@ module.exports = {
   getPolls,
   getPollById,
   addPoll,
+  getPollByLink
 };
