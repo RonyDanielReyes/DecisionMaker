@@ -22,7 +22,7 @@ const mailNewPoll = async function(poll) {
 
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: '"Decision Makr" <decision@makr.com>', // sender address
+    from: '"Decision Maker" <decision@maker.com>', // sender address
     to: `${poll.creator_email}`, // list of receivers
     subject: "Your New Poll", // Subject line
     html: `
@@ -60,7 +60,7 @@ const mailNewVote = async function(poll, voter_name) {
 
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: '"Decision Makr" <decision@makr.com>', // sender address
+    from: '"Decision Maker" <decision@maker.com>', // sender address
     to: `${poll.creator_email}`, // list of receivers
     subject: "Votes on Your Poll", // Subject line
     html: `
