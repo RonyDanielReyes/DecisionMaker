@@ -24,12 +24,28 @@ body {
 
 main {
   width: 75%;
-  background-color: #9ad5db;
+  background-color: #e0f2f5;
+  min-height: 30em;
   margin: 0 auto 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  border-radius: 10px;
+}
+
+notif {
+  width: 50%;
+  background-color: #d4daad;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1%;
+  border-radius: 5px;
+}
+notif > *{
+  margin: 0.5em;
 }
 
 table {
@@ -50,4 +66,16 @@ form {
 button {
   background-color: #057782;
   color: white;
+}
+
+input {
+  width: 300px;
+  margin: 0.5em;
+}
+
+.errorMsg {
+  text-align: center;
+  color: #b66824;
+  padding: 15px;
+  margin-bottom: 20px;
 }
