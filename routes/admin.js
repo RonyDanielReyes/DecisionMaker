@@ -28,7 +28,6 @@ router.get('/:id', (req, res) => {
     });
 });
 
-
 router.post('/:id/stop',(req,res)=>{
   const link = req.params.id;
   pollsQueries.getPollByLink(link)
